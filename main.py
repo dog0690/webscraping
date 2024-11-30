@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import time
+import datetime
 import os
 import requests
 
@@ -23,15 +24,21 @@ def website(url):
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 def main():
+    i = 0
+    
     while True:   
         url = "https://finance.yahoo.com/markets/crypto/all/"
-        clear_terminal()
+        now = datetime.datetime.now()
+        current_time = now.time().replace(microsecond=0)
+        clear_terminal() 
+        print(current_time)
+        print(f"iteration {i}")
         websites = website(url)
         pricepoint(websites)
         #cypo(websites)
-        time.sleep(90)  
-def timer():
-    seconds = time.time()
+        time.sleep(5) 
+        i +=1
+
 
 def cypo(table):
         crypto = table.find("tr", class_="row false yf-paf8n5", id=0)
