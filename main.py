@@ -1,7 +1,63 @@
 from bs4 import BeautifulSoup
+import time
+import os
 import requests
 
-url = ('https://finance.yahoo.com/markets/crypto/active/')
-page = requests.get(url)
-soup = BeautifulSoup(page.text, "html.parser")
-table = soup.find("tbody", class_ = "body yf-paf8n5")
+
+def pricepoint(table):
+        for i in range(25):
+            crypto = table.find("tr", class_="row false yf-paf8n5", id=i)
+            crypto_percent_change = crypto.find_all("td", class_ = "cell tw-h-10 tw-py-0 yf-paf8n5")[4]
+            span = crypto_percent_change.find_all("span")[1]
+            name = crypto.find("td", class_ = "cell tw-h-10 tw-py-0 tw-text-left yf-paf8n5")
+            coin = name.find("div", class_ = "yf-h8l7j7").string
+            print(f"{coin:<20}: {span.string}")
+            i +=1
+
+def website(url):
+    page = requests.get(url)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, "html.parser")
+    table = soup.find(class_ = "body yf-paf8n5")
+    return(table)
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+def main():
+    while True:   
+        url = "https://finance.yahoo.com/markets/crypto/all/"
+        clear_terminal()
+        websites = website(url)
+        pricepoint(websites)
+        #cypo(websites)
+        time.sleep(90)  
+def timer():
+    seconds = time.time()
+
+def cypo(table):
+        crypto = table.find("tr", class_="row false yf-paf8n5", id=0)
+        crypto_percent_change = crypto.find_all("td", class_ = "cell tw-h-10 tw-py-0 yf-paf8n5")[4]
+        span = crypto_percent_change.find_all("span")[1]
+        name = crypto.find("td", class_ = "cell tw-h-10 tw-py-0 tw-text-left yf-paf8n5")
+        coin = name.find("div", class_ = "yf-h8l7j7").string
+        print(f"{coin:<20}: {span.string}")
+        return(span.string)
+def cypo2(table):
+        crypto = table.find("tr", class_="row false yf-paf8n5", id=0)
+        crypto_percent_change = crypto.find_all("td", class_ = "cell tw-h-10 tw-py-0 yf-paf8n5")[4]
+        span = crypto_percent_change.find_all("span")[1]
+        name = crypto.find("td", class_ = "cell tw-h-10 tw-py-0 tw-text-left yf-paf8n5")
+        coin = name.find("div", class_ = "yf-h8l7j7").string
+        print(f"{coin:<20}: {span.string}")
+        return(span.string)
+
+def timer():
+    url = "https://finance.yahoo.com/markets/crypto/all/"
+    first = cypo(website(url))
+    second = cypo2(website(url))
+    start = time.time()
+    while first == second:
+        time.sleep(30)
+        second = cypo(website(url))
+    end = time.time()
+    print(f"Time taken to update {end-start} seconds")
+main()
