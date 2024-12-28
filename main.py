@@ -36,7 +36,7 @@ def main():
         websites = website(url)
         pricepoint(websites)
         #cypo(websites)
-        time.sleep(5) 
+        time.sleep(600) 
         i +=1
 
 
